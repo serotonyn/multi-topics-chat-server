@@ -1,6 +1,5 @@
 .editorconfig
 .env
-.env.example
 .gitattributes
 README.md
 node_modules/
