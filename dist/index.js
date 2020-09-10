@@ -42,7 +42,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
         entities: [User_1.User, Message_1.Message],
     });
-    const PORT = 4000;
+    const PORT = process.env.PORT || 4000;
     const app = express_1.default();
     app.set("trust proxy", 1);
     app.use(cors_1.default({
