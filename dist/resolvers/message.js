@@ -97,9 +97,9 @@ let MessageResolver = class MessageResolver {
             const messages = yield typeorm_1.getConnection().query(`
     select m.*
     from message m
-    where (m."userId" = ${req.session.userId} AND m."otherUserId" = ${otherUserId}
+    where (m."userId" = ${req.user.id} AND m."otherUserId" = ${otherUserId}
     )
-    OR ( m."userId" = ${otherUserId} AND m."otherUserId" = ${req.session.userId}
+    OR ( m."userId" = ${otherUserId} AND m."otherUserId" = ${req.user.id}
       )
     order by m."createdAt" DESC
     limit $1
@@ -121,8 +121,8 @@ let MessageResolver = class MessageResolver {
             const messages = yield typeorm_1.getConnection().query(`
     select m.*
     from message m
-    where (m."userId" = ${req.session.userId} AND m."otherUserId" = ${otherUserId})
-    OR ( m."userId" = ${otherUserId} AND m."otherUserId" = ${req.session.userId})
+    where (m."userId" = ${req.user.id} AND m."otherUserId" = ${otherUserId})
+    OR ( m."userId" = ${otherUserId} AND m."otherUserId" = ${req.user.id})
     `);
             if (!messages || !messages.length)
                 return [];
@@ -144,7 +144,7 @@ let MessageResolver = class MessageResolver {
     }
     createMessage(publish, input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const curUser = yield User_1.User.findOne(req.session.userId);
+            const curUser = yield User_1.User.findOne(req.user.id);
             const otherUser = yield User_1.User.findOne(input.otherUserId);
             if (!otherUser)
                 throw new Error("not authorized");
@@ -225,7 +225,7 @@ __decorate([
 __decorate([
     type_graphql_1.Subscription({
         topics: CREATE_NEW_MESSAGE,
-        filter: ({ payload, context }) => context.req.session.userId === payload.otherUser.id,
+        filter: ({ payload, context }) => context.req.user.id === payload.otherUser.id,
     }),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Root()),
