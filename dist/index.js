@@ -76,6 +76,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     const apolloServer = new apollo_server_express_1.ApolloServer({
         playground: true,
+        introspection: true,
         schema,
         context: (args) => {
             var _a;

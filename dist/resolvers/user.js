@@ -127,13 +127,12 @@ let UserResolver = class UserResolver {
                     };
                 }
             }
-            req.user.id = user.id;
             return { user };
         });
     }
     login(usernameOrEmail, password, { req, SECRET, SECRET2 }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { ok, token, refreshToken, errors } = yield auth_1.tryLogin(usernameOrEmail, password, User_1.User, SECRET, SECRET2);
+            const { ok, token, refreshToken, errors } = yield auth_1.tryLogin(usernameOrEmail, password, SECRET, SECRET2);
             return {
                 ok,
                 token,
@@ -145,6 +144,7 @@ let UserResolver = class UserResolver {
     logout({ req, res }) {
     }
     users({ req }) {
+        console.log(req);
         return User_1.User.find({ where: { id: typeorm_1.Not(req.user.id) } });
     }
     user(userId) {
