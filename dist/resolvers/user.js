@@ -144,7 +144,6 @@ let UserResolver = class UserResolver {
     logout({ req, res }) {
     }
     users({ req }) {
-        console.log(req);
         return User_1.User.find({ where: { id: typeorm_1.Not(req.user.id) } });
     }
     user(userId) {
