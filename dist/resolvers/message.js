@@ -86,28 +86,29 @@ let MessageResolver = class MessageResolver {
     otherUser(message, { userLoader }) {
         return userLoader.load(message.otherUserId);
     }
-    messages(limit, offset, otherUserId, { req }) {
+    messages(limit, cursor, otherUserId, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
-            const realLimitPlusOne = realLimit + 1;
-            const replacements = [realLimitPlusOne];
-            if (offset) {
-                replacements.push(offset);
+            const reaLimitPlusOne = realLimit + 1;
+            const replacements = [reaLimitPlusOne];
+            if (cursor) {
+                replacements.push(new Date(parseInt(cursor)));
             }
             const messages = yield typeorm_1.getConnection().query(`
     select m.*
     from message m
     where (m."userId" = ${req.user.id} AND m."otherUserId" = ${otherUserId}
+    ${cursor ? `AND m."createdAt" < $2` : ""}
     )
     OR ( m."userId" = ${otherUserId} AND m."otherUserId" = ${req.user.id}
+    ${cursor ? `AND m."createdAt" < $2` : ""}
       )
     order by m."createdAt" DESC
     limit $1
-    ${offset ? `offset $2` : ""}
     `, replacements);
             return {
                 messages: messages.slice(0, realLimit),
-                hasMore: messages.length === realLimitPlusOne,
+                hasMore: messages.length === reaLimitPlusOne,
             };
         });
     }
@@ -186,9 +187,8 @@ __decorate([
 ], MessageResolver.prototype, "otherUser", null);
 __decorate([
     type_graphql_1.Query(() => PaginatedMessages),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("limit", () => type_graphql_1.Int)),
-    __param(1, type_graphql_1.Arg("offset", () => type_graphql_1.Int, { nullable: true })),
+    __param(1, type_graphql_1.Arg("cursor", () => String, { nullable: true })),
     __param(2, type_graphql_1.Arg("otherUserId", () => type_graphql_1.Int)),
     __param(3, type_graphql_1.Ctx()),
     __metadata("design:type", Function),

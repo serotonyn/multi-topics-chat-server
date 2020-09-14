@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pubsub = void 0;
 require("reflect-metadata");
 require("dotenv-safe/config");
 const path_1 = __importDefault(require("path"));
@@ -32,7 +31,6 @@ const auth_1 = require("./utils/auth");
 const createUserLoader_1 = require("./utils/createUserLoader");
 const SECRET = process.env.SECRET;
 const SECRET2 = process.env.SECRET2;
-exports.pubsub = new apollo_server_express_1.PubSub();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield typeorm_1.createConnection({
         type: "postgres",
