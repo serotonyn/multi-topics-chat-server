@@ -56,13 +56,13 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             }
             catch (err) {
                 const refreshToken = req.headers["x-refresh-token"];
-                const newTokens = yield auth_1.refreshTokens(token, refreshToken, SECRET, SECRET2);
-                if (newTokens.token && newTokens.refreshToken) {
+                const newTokens = yield auth_1.refreshTokens(refreshToken, SECRET, SECRET2);
+                if ((newTokens === null || newTokens === void 0 ? void 0 : newTokens.token) && (newTokens === null || newTokens === void 0 ? void 0 : newTokens.refreshToken)) {
                     res.set("Access-Control-Expose-Headers", "x-token, x-refresh-token");
                     res.set("x-token", newTokens.token);
                     res.set("x-refresh-token", newTokens.refreshToken);
                 }
-                req.user = newTokens.user;
+                req.user = newTokens === null || newTokens === void 0 ? void 0 : newTokens.user;
             }
         }
         next();
@@ -98,8 +98,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
                         };
                     }
                     catch (err) {
-                        const newTokens = yield auth_1.refreshTokens(token, refreshToken, SECRET, SECRET2);
-                        return { req: { user: newTokens.user } };
+                        const newTokens = yield auth_1.refreshTokens(refreshToken, SECRET, SECRET2);
+                        return { req: { user: newTokens === null || newTokens === void 0 ? void 0 : newTokens.user } };
                     }
                 }
                 throw new Error(`Unauthorized`);

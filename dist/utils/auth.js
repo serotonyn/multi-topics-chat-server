@@ -30,28 +30,28 @@ exports.createTokens = (user, secret, secret2) => __awaiter(void 0, void 0, void
     });
     return [createToken, createRefreshToken];
 });
-exports.refreshTokens = (token, refreshToken, SECRET, SECRET2) => __awaiter(void 0, void 0, void 0, function* () {
+exports.refreshTokens = (refreshToken, SECRET, SECRET2) => __awaiter(void 0, void 0, void 0, function* () {
     let userId = 0;
     try {
         const { user: { id }, } = jsonwebtoken_1.default.decode(refreshToken);
         userId = id;
     }
     catch (err) {
-        return {};
+        return undefined;
     }
     if (!userId) {
-        return {};
+        return undefined;
     }
     const user = yield User_1.User.findOne({ where: { id: userId } });
     if (!user) {
-        return {};
+        return undefined;
     }
     const refreshSecret = user.password + SECRET2;
     try {
         jsonwebtoken_1.default.verify(refreshToken, refreshSecret);
     }
     catch (err) {
-        return {};
+        return undefined;
     }
     const [newToken, newRefreshToken] = yield exports.createTokens(user, SECRET, refreshSecret);
     return {

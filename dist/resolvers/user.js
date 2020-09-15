@@ -24,15 +24,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserResolver = void 0;
+exports.UserResolver = exports.UsernamePasswordInput = void 0;
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entities/User");
 const argon2_1 = __importDefault(require("argon2"));
-const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
 const validateRegister_1 = require("../utils/validateRegister");
 const typeorm_1 = require("typeorm");
 const isAuth_1 = require("../middleware/isAuth");
 const auth_1 = require("../utils/auth");
+let UsernamePasswordInput = class UsernamePasswordInput {
+};
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "username", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "password", void 0);
+UsernamePasswordInput = __decorate([
+    type_graphql_1.InputType()
+], UsernamePasswordInput);
+exports.UsernamePasswordInput = UsernamePasswordInput;
 let FieldError = class FieldError {
 };
 __decorate([
@@ -93,7 +110,7 @@ let UserResolver = class UserResolver {
         }
         return User_1.User.findOne(req.user.id);
     }
-    register(options, { req }) {
+    register(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const errors = validateRegister_1.validateRegister(options);
             if (errors) {
@@ -130,7 +147,7 @@ let UserResolver = class UserResolver {
             return { user };
         });
     }
-    login(usernameOrEmail, password, { req, SECRET, SECRET2 }) {
+    login(usernameOrEmail, password, { SECRET, SECRET2 }) {
         return __awaiter(this, void 0, void 0, function* () {
             const { ok, token, refreshToken, errors } = yield auth_1.tryLogin(usernameOrEmail, password, SECRET, SECRET2);
             return {
@@ -174,9 +191,8 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg("options")),
-    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
+    __metadata("design:paramtypes", [UsernamePasswordInput]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "register", null);
 __decorate([
